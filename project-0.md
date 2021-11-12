@@ -58,7 +58,7 @@ Send your project concept descriptions to your trainer via Slack and await conce
 
 All project concepts must display the following domain-independent features/requirements:
  
-- [ ] Use of custom data structures (do not use java.util Collection types!)
+- [ ] Use of custom data structures (do not use java.com.revature.banking.util Collection types!)
 - [ ] Basic validation of user input (e.g. no registration for classes outside of registration window, no negative deposits/withdrawals, no overdrafting, etc.) 
 - [ ] Unit tests for all business-logic classes
 - [ ] All exceptions are properly caught and handled
