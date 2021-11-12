@@ -1,5 +1,6 @@
 package com.revature.banking.screens;
-
+//TODO Create Accounts Table in DB. Write logic to find accounts by Username/Account#.
+// If able, Joint accounts by Usernames/Account#.
 import com.revature.banking.Services.UserService;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
@@ -28,12 +29,12 @@ public class BankAccountCreationScreen extends Screen {
 
         //Only Display if Session is Active and logged in.
         while (userService.isSessionActive()) {
-            System.out.printf("\n%s's Dashboard\n", sessionUser.getFirstName());
+            System.out.println("Account Creation Menu");
 
             String menu = "1) Create new checking account\n" +
                     "2) Create new savings account\n" +
                     "3) Create new investment account\n" +
-                    "4) /*Strech Goal of Join Accounts*/\n" +
+                    "4) /*Stretch Goal of Join Accounts*/\n" +
                     "5) Back to Dashboard\n" +
                     "> ";
 
