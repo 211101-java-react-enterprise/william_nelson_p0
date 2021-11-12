@@ -1,8 +1,5 @@
 package com.revature.banking.Services;
 
-//This is a class to package user information, and call functions related to a user.
-
-
 import com.revature.banking.DAOS.AppUserDAO;
 import com.revature.banking.Exceptions.AuthenticationException;
 import com.revature.banking.Exceptions.InvalidRequestException;
@@ -12,9 +9,8 @@ import com.revature.banking.models.AppUser;
 public class UserService {
 
     //Appuser DAO
-    private AppUserDAO userDAO = new AppUserDAO();
-
     //AppUser to be passed to screens to track user and loggin status
+    private final AppUserDAO userDAO;
     private AppUser sessionUser;
 
     public UserService(AppUserDAO userDAO) {
@@ -66,9 +62,10 @@ public class UserService {
 
     }
 
-    //This Function authenticates the data given in an AppUser,
-    // and if it is valid input, returns an AppUser
-    public AppUser authenticateUser(String username, String password) throws AuthenticationException {
+    //This Function authenticates the data given based on a username and password,
+    // and if it is valid input, sets the session user to the Authenticated user.
+    //Dashboard will use this user to determine if login was successful.
+    public void authenticateUser(String username, String password) {
 
         //Only Executes if the data isn't null or empty
         if (username == null || username.trim().equals("") || password.trim().equals("")){
@@ -83,7 +80,7 @@ public class UserService {
         }
 
         //Return the Authenticated user to the caller of the Authenticate process
-        return authenticatedUser;
+        sessionUser = authenticatedUser;
 
 
     }
