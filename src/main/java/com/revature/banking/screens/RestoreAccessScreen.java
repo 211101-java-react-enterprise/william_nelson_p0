@@ -13,6 +13,7 @@ public class RestoreAccessScreen extends Screen{
 
     @Override
     public void render() throws Exception {
+        //Strech goal
 
     }
 }

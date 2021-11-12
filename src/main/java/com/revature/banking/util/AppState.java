@@ -2,10 +2,7 @@ package com.revature.banking.util;
 
 import com.revature.banking.DAOS.AppUserDAO;
 import com.revature.banking.Services.UserService;
-import com.revature.banking.screens.DashboardScreen;
-import com.revature.banking.screens.LoginScreen;
-import com.revature.banking.screens.RegisterScreen;
-import com.revature.banking.screens.WelcomeScreen;
+import com.revature.banking.screens.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -35,6 +32,7 @@ public class AppState {
         router.addScreen(new RegisterScreen(consoleReader, router, userService));
         router.addScreen(new LoginScreen(consoleReader, router, userService));
         router.addScreen(new DashboardScreen(consoleReader, router, userService));
+        router.addScreen((new BankAccountCreationScreen(consoleReader, router, userService)));
 
     }
 
