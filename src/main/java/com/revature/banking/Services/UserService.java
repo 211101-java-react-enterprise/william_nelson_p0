@@ -10,6 +10,7 @@ public class UserService {
 
     //Appuser DAO
     //AppUser to be passed to screens to track user and loggin status
+    //List of Accounts that can be passed through the program
     private final AppUserDAO userDAO;
     private AppUser sessionUser;
 

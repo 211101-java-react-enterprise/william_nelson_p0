@@ -1,7 +1,11 @@
 package com.revature.banking.screens;
 //TODO Create Accounts Table in DB. Write logic to find accounts by Username/Account#.
 // If able, Joint accounts by Usernames/Account#.
+import com.revature.banking.Exceptions.InvalidRequestException;
+import com.revature.banking.Exceptions.ResourcePersistenceException;
+import com.revature.banking.Services.AccountService;
 import com.revature.banking.Services.UserService;
+import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
 
@@ -10,11 +14,13 @@ import java.io.BufferedReader;
 public class BankAccountCreationScreen extends Screen {
 
     private final UserService userService;
+    private final AccountService accountService;
 
 
-    public BankAccountCreationScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService) {
+    public BankAccountCreationScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService, AccountService accountService) {
         super("AccountCreationScreen", "/AccountCreation", consoleReader, router);
         this.userService = userService;
+        this.accountService = accountService;
     }
 
     @Override
@@ -32,11 +38,9 @@ public class BankAccountCreationScreen extends Screen {
             System.out.println("Account Creation Menu");
 
             String menu = "1) Create new checking account\n" +
-                    "2) Create new savings account\n" +
-                    "3) Create new investment account\n" +
-                    "4) /*Stretch Goal of Join Accounts*/\n" +
-                    "5) Back to Dashboard\n" +
-                    "> ";
+                          "2) Create new savings account\n" +
+                          "3) Back to Dashboard\n" +
+                           "> ";
 
             System.out.print(menu);
 
@@ -44,40 +48,12 @@ public class BankAccountCreationScreen extends Screen {
 
             switch (userSelection) {
                 case "1":
-                    System.out.println("Creating new checking account");
-                    //Logic
-                    //Find Session User in DB
-                    //Write new account to DB
-                    //Ensure User credentials can find account
-                    successAndReturn();
+                 accountCreationMachine("Checking");
                     break;
                 case "2":
-                    System.out.println("Creating new savings account");
-                    //Logic
-                    //Find Session User in DB
-                    //Write new account to DB
-                    //Ensure User credentials can find account
-                    successAndReturn();
+                accountCreationMachine("Savings");
                     break;
                 case "3":
-                    System.out.println("Creating new investment account");
-                    //Logic
-                    //Find Session User in DB
-                    //Write new account to DB
-                    //Ensure User credentials can find account
-                    successAndReturn();
-                    break;
-                case "4":
-                    System.out.println("Creating new joint account");
-                    //Logic
-                    //Find Session User in DB
-                    //Get Credentials for second user
-                    //verify second user exists
-                    //make new account with session user and add secondary user on account
-                    //Ensure User credentials can find account
-                    successAndReturn();
-                    break;
-                case "5":
                     System.out.println("Returning to Dashboard");
                     router.navigate("/dashboard");
                     break;
@@ -91,9 +67,23 @@ public class BankAccountCreationScreen extends Screen {
 
     //Method to display account creation was successful and to get back to dashboard for further transactions.
     //Avoiding copy and paste.
-    private void successAndReturn() throws Exception{
-        System.out.println("Account Created, returning to dashboard");
+    protected void successAndReturn() throws Exception{
+        System.out.println("Account Created, Returning to Dashboard");
         this.router.navigate("/dashboard");
+    }
+
+    protected void accountCreationMachine(String type) throws Exception{
+        System.out.println("Creating new " + type +  " account");
+
+        Account newAccount = new Account(); //New account with zero balance no type.
+        newAccount.setType(type);
+
+        try {
+            accountService.createNewAccount(newAccount);
+            successAndReturn();
+        } catch (InvalidRequestException | ResourcePersistenceException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

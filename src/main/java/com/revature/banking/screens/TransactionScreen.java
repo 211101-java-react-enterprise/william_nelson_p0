@@ -1,5 +1,6 @@
 package com.revature.banking.screens;
 
+import com.revature.banking.Services.AccountService;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
@@ -8,10 +9,12 @@ import java.io.BufferedReader;
 
 public class TransactionScreen extends Screen{
 
+    private final AccountService accountService;
     private final UserService userService;
 
-    public TransactionScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService) {
+    public TransactionScreen(BufferedReader consoleReader, ScreenRouter router,UserService userService, AccountService accountService) {
         super("TransactionScreen", "/Transactions", consoleReader, router);
+        this.accountService = accountService;
         this.userService = userService;
     }
 
@@ -50,8 +53,7 @@ public class TransactionScreen extends Screen{
                     //Find Account in DB by Username, Type, and Status(Joint or Primary)
                     //Add Deposit to balance.
                     //Write balance to DB.
-                    //Ask about more Transactions
-                    //Exit As Intended.
+                    successAndReturn();
                     break;
                 case "2":
                     System.out.println("Transfer selected");
@@ -61,8 +63,7 @@ public class TransactionScreen extends Screen{
                     //Find Accounts in DB by Username and/or Status(Joint or Primary)
                     //Get amount to move. Verify not negative or > account balance.
                     //Change balances if data is good.
-                    //Ask about more Transactions
-                    //Exit As Intended.
+                    successAndReturn();
                     break;
                 case "3":
                     System.out.println("Withdraw selected");
@@ -74,10 +75,16 @@ public class TransactionScreen extends Screen{
                     //verify not greater than current balance
                     //do math
                     //write to database
-                    //Ask about looping
-                    //exit if needed
+                   successAndReturn();
                     break;
                 case "4":
+                    System.out.println("Account History Selected");
+                    //Get a list of accounts
+                    //Ask which account transactions to review
+                    //Print list of selected account transactions
+                    successAndReturn();
+                    break;
+                case "5":
                     System.out.println("Returning to Dashboard");
                     router.navigate("/dashboard");
                     break;
@@ -85,5 +92,16 @@ public class TransactionScreen extends Screen{
                     System.out.println("The user made an invalid selection");
             }
         }
+    }
+    protected void successAndReturn() throws Exception{
+        System.out.println("Transaction successful, continue? Y/N?");
+        String transactAgain = consoleReader.readLine();
+        if (transactAgain.equals("Y") || (transactAgain.equals("y")) || (transactAgain.equals("yes")) || (transactAgain.equals("YES"))) {
+            System.out.println("Returning to Transactions");
+        } else {
+            System.out.println("Returning to dashboard.");
+            router.navigate("/dashboard");
+        }
+
     }
 }

@@ -47,6 +47,7 @@ public class DashboardScreen extends Screen {
                     break;
                 case "2":
                     System.out.println("Transactions selected");
+                    router.navigate("/Transactions");
                     break;
                 case "3":
                     System.out.println("Account creation selected");

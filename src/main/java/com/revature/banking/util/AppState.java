@@ -1,6 +1,8 @@
 package com.revature.banking.util;
 
+import com.revature.banking.DAOS.AccountDAO;
 import com.revature.banking.DAOS.AppUserDAO;
+import com.revature.banking.Services.AccountService;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.screens.*;
 
@@ -28,11 +30,16 @@ public class AppState {
         AppUserDAO userDAO = new AppUserDAO();
         UserService userService = new UserService(userDAO);
 
+        AccountDAO accountDAO = new AccountDAO();
+        AccountService accountService = new AccountService(accountDAO, userService);
+
+         //TODO Determine which screens need the accountService and pass it in.
         router.addScreen(new WelcomeScreen(consoleReader, router));
         router.addScreen(new RegisterScreen(consoleReader, router, userService));
         router.addScreen(new LoginScreen(consoleReader, router, userService));
         router.addScreen(new DashboardScreen(consoleReader, router, userService));
-        router.addScreen((new BankAccountCreationScreen(consoleReader, router, userService)));
+        router.addScreen((new BankAccountCreationScreen(consoleReader, router, userService, accountService)));
+        router.addScreen((new TransactionScreen(consoleReader, router, userService, accountService)));
 
     }
 
