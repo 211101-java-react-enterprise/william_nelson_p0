@@ -14,6 +14,7 @@ public class Account {
     private String type;
     private AppUser owner;
     private Double balance;
+    private String name;
 
 
     public Account() {
@@ -86,5 +87,12 @@ public class Account {
                 ", owner=" + owner +
                 ", balance=" + balance +
                 '}';
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return this.name;
     }
 }

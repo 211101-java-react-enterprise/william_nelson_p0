@@ -60,7 +60,7 @@ public class LinkedList<T> implements List<T> {
         return size;
     }
 
-    // TODO: IMPLEMENT ME!
+
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {

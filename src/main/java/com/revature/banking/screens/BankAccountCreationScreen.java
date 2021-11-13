@@ -74,9 +74,12 @@ public class BankAccountCreationScreen extends Screen {
 
     protected void accountCreationMachine(String type) throws Exception{
         System.out.println("Creating new " + type +  " account");
+        System.out.println("Please enter an account name!");
+        String accountName = consoleReader.readLine();
 
         Account newAccount = new Account(); //New account with zero balance no type.
         newAccount.setType(type);
+        newAccount.setName(accountName);
 
         try {
             accountService.createNewAccount(newAccount);

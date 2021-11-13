@@ -18,7 +18,7 @@ public class AccountDAO implements CrudDAO<Account> {
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-            String sql = "select * from accounts where owner_id = ?";
+            String sql = "select * from accounts a join app_users au on a.owner_id = au.id where au.id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, userId);
             ResultSet rs = pstmt.executeQuery();
@@ -39,6 +39,7 @@ public class AccountDAO implements CrudDAO<Account> {
                accountCreator.setEmail(rs.getString("email"));
                accountCreator.setUsername(rs.getString("username"));
                accountCreator.setEmail(rs.getString("email"));
+               account.setName(rs.getString("name"));
                account.setOwner(accountCreator);
                accounts.add(account);
            }
@@ -65,12 +66,13 @@ public class AccountDAO implements CrudDAO<Account> {
             //Create new Account ID
             newAccount.setId(UUID.randomUUID().toString());
 
-            String sql = "insert into accounts (id, type, balance, owner_id) values (?, ?, ?, ?)";
+            String sql = "insert into accounts (id, name, type, balance, owner_id) values (?, ?, ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, newAccount.getId());
-            pstmt.setString(2, newAccount.getType());
-            pstmt.setDouble(3, newAccount.getBalance());
-            pstmt.setString(4, newAccount.getOwner().getId());
+            pstmt.setString(2, newAccount.getName());
+            pstmt.setString(3, newAccount.getType());
+            pstmt.setDouble(4, newAccount.getBalance());
+            pstmt.setString(5, newAccount.getOwner().getId());
 
             int rowsInserted = pstmt.executeUpdate();
 

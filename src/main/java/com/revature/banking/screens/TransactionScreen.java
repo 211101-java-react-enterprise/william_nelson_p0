@@ -1,9 +1,14 @@
 package com.revature.banking.screens;
 
 import com.revature.banking.Services.AccountService;
+import com.revature.banking.Services.TransactionService;
 import com.revature.banking.Services.UserService;
+import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
+import com.revature.banking.util.LinkedList;
+import com.revature.banking.util.List;
 import com.revature.banking.util.ScreenRouter;
+import sun.awt.image.ImageWatched;
 
 import java.io.BufferedReader;
 
@@ -11,9 +16,11 @@ public class TransactionScreen extends Screen{
 
     private final AccountService accountService;
     private final UserService userService;
+    private final TransactionService transactionService;
 
-    public TransactionScreen(BufferedReader consoleReader, ScreenRouter router,UserService userService, AccountService accountService) {
+    public TransactionScreen(BufferedReader consoleReader, ScreenRouter router,UserService userService, AccountService accountService, TransactionService transactionService) {
         super("TransactionScreen", "/Transactions", consoleReader, router);
+        this.transactionService = transactionService;
         this.accountService = accountService;
         this.userService = userService;
     }
@@ -32,11 +39,11 @@ public class TransactionScreen extends Screen{
         while (userService.isSessionActive()) {
             System.out.println("Transactions Menu\n");
 
-            String menu = "1) Deposit\n" +
-                    "2) Transfer\n" +
-                    "3) Withdraw\n" +
-                    "4) Return to Dashboard\n" +
-                    "> ";
+            String menu = "1) Check balance\n" +
+                        "2) Deposit\n" +
+                        "3) Withdraw\n" +
+                        "4) Return to Dashboard\n" +
+                        "> ";
 
             System.out.print(menu);
 
@@ -44,19 +51,25 @@ public class TransactionScreen extends Screen{
 
             switch (userSelection) {
                 case "1":
-                    System.out.println("Deposit selected");
-                    //Logic
-                    //Get Account Type
-                    //Get Primary or Joint Status
-                    //Get Amount to Deposit
-                    //verify non-negative. If so clear data and return to Transactions.
-                    //Find Account in DB by Username, Type, and Status(Joint or Primary)
-                    //Add Deposit to balance.
-                    //Write balance to DB.
+                    System.out.println("Check Balance");
+
+                    List<Account> accountList = accountService.findMyAccounts();
+                    System.out.println("Which balances do you want?");
+                    for (int i = 0; i < accountList.size(); i++) {
+                        System.out.println((i + 1) + " " + accountList.get(i).getName());
+                    }
+                    System.out.println("\nPlease select an number next to an account: ");
+                    int selection = Integer.parseInt(consoleReader.readLine());
+                    Double BalanceSelection = accountList.get((selection - 1)).getBalance();
+
+                    System.out.println("Selected Balance is: " + BalanceSelection);
                     successAndReturn();
                     break;
+
+
+
                 case "2":
-                    System.out.println("Transfer selected");
+                    System.out.println("Deposit");
                     //Logic
                     //Get Account to remove from. Get Account to deposit too.
                     //Verify user is on both accounts in some way.
@@ -65,6 +78,7 @@ public class TransactionScreen extends Screen{
                     //Change balances if data is good.
                     successAndReturn();
                     break;
+
                 case "3":
                     System.out.println("Withdraw selected");
                     //Logic
@@ -77,13 +91,13 @@ public class TransactionScreen extends Screen{
                     //write to database
                    successAndReturn();
                     break;
+
                 case "4":
-                    System.out.println("Account History Selected");
-                    //Get a list of accounts
-                    //Ask which account transactions to review
-                    //Print list of selected account transactions
+                    System.out.println("Returning to Dashboard");
+                    router.navigate("/dashboard");
                     successAndReturn();
                     break;
+
                 case "5":
                     System.out.println("Returning to Dashboard");
                     router.navigate("/dashboard");
@@ -93,6 +107,7 @@ public class TransactionScreen extends Screen{
             }
         }
     }
+
     protected void successAndReturn() throws Exception{
         System.out.println("Transaction successful, continue? Y/N?");
         String transactAgain = consoleReader.readLine();
@@ -104,4 +119,5 @@ public class TransactionScreen extends Screen{
         }
 
     }
+
 }
