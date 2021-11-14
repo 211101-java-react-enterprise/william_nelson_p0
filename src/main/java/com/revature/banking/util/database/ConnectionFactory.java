@@ -1,9 +1,11 @@
 package com.revature.banking.util.database;
 
-//TODO Review logic and commit to memory
+//TODO Add Logger? Might need a second logger here that we close. Ask Wezley
 
 //This Class Establishes and runs a connection to a DB and gives access to the DB instance connection
 
+
+import com.revature.banking.util.logging.Logger;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,8 +16,8 @@ import java.util.Properties;
 
 public class ConnectionFactory {
 
-    private static final ConnectionFactory connectionFactory = new ConnectionFactory();
 
+    private static final ConnectionFactory connectionFactory = new ConnectionFactory();
     //This file obscures our database connection from Repo and Source code
     private Properties props = new Properties();
 
@@ -46,10 +48,11 @@ public class ConnectionFactory {
 
         Connection conn = null;
 
+
         try {
             conn = DriverManager.getConnection(props.getProperty("url"), props.getProperty("username"), props.getProperty("password"));
         } catch (SQLException e) {
-            e.printStackTrace();
+           e.printStackTrace();
         }
 
         return conn;

@@ -1,4 +1,5 @@
 package com.revature.banking.Services;
+//TODO Write Test Cases and Implement
 
 //This service handles all validation of transactions that can be made on accounts
 //Deposit
@@ -12,6 +13,7 @@ import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.models.Account;
 import com.revature.banking.models.Transaction;
 import com.revature.banking.util.collections.List;
+import com.revature.banking.util.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,12 +23,14 @@ public class TransactionService {
     private final TransactionsDAO transactionDAO;
     private final AccountService accountService;
     private final UserService userService;
+    private final Logger logger;
 
 
-    public TransactionService (TransactionsDAO transactionDAO, AccountService accountService, UserService userService){
+    public TransactionService (TransactionsDAO transactionDAO, AccountService accountService, UserService userService, Logger logger){
         this.transactionDAO = transactionDAO;
         this.accountService = accountService;
         this.userService = userService;
+        this.logger = logger;
     }
 
 
@@ -47,6 +51,7 @@ public class TransactionService {
         Double BalanceSelection = accountList.get((selection - 1)).getBalance();
 
         System.out.println("Selected Balance is: " + BalanceSelection);
+        logger.log("Balance Check Successful");
     }
 
 
@@ -62,10 +67,13 @@ public class TransactionService {
             int decimalPlaces = text.length() - integerPlaces - 1;
 
             if(decimalPlaces > 2) {
-                throw new InputErrorException("Please use correct format of $####.## when entering values");
+                String msg = "Please use correct format of $####.## when entering values";
+                logger.logAndPrint(msg);
+                throw new InputErrorException(msg);
             }
         }
 
+        logger.log("deposit valid");
         return true;
 
 
@@ -97,8 +105,8 @@ public class TransactionService {
         do {
             try {
                     if (depositAmount == 0) {
-                        System.out.println("Zero Amount selected");
-                        System.out.println("Rerouting to Transaction Menu");
+                        logger.logAndPrint("Zero Amount selected");
+                        logger.logAndPrint("Rerouting to Transaction Menu");
                         depositSuccess = true; //Break loop
                     } else if (transactionService.isDepositAmountValid(depositAmount) && (depositAmount != 0)) {
                         Double depositTotal = depositAmount + BalanceSelection;
@@ -119,13 +127,14 @@ public class TransactionService {
                         accountService.updateOldAccount(updaterAccount);
                         depositSuccess = true; //Break Loop
                     } else {
-                        System.out.println("Error in deposit process");
+                        logger.logAndPrint("Error in deposit process");
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.log(e.getMessage());
                 }
 
         } while (depositSuccess = false);
+        logger.log("Deposit Successful");
 
     }
 
@@ -184,6 +193,8 @@ public class TransactionService {
 
             } while (withdrawSuccess = false);
 
+            logger.log("Withdraw successful");
+
         }
 
     private boolean isWithdrawAmountValid(Double amount, Double currentBalance) {
@@ -197,12 +208,17 @@ public class TransactionService {
 
             //If not Valid
             if(decimalPlaces > 2) {
-                throw new InputErrorException("Please use correct format of $####.## when entering values");
+                String msg = "Please use correct format of $####.## when entering values";
+                logger.logAndPrint(msg);
+                throw new InputErrorException(msg);
             } else if (currentBalance - amount < 0) {
-                throw new InvalidRequestException("Amount selected would result in overdrawing, canceling transaction");
+                String msg = "Amount selected would result in overdrawing, canceling transaction";
+                logger.logAndPrint(msg);
+                throw new InvalidRequestException(msg);
             }
 
         }
+        logger.log("Withdrawal Valid");
         return true;
     }
 

@@ -7,6 +7,7 @@ import com.revature.banking.Services.AccountService;
 import com.revature.banking.Services.TransactionService;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.screens.*;
+import com.revature.banking.util.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,30 +22,37 @@ import java.io.InputStreamReader;
 
 public class AppState {
 
+    private final Logger logger;
     private static boolean appRunning;
     private final ScreenRouter router;
 
     public AppState() {
+
+        logger = Logger.getLogger(false);
+        logger.log("Initializing application");
+
         appRunning = true;
-        router = new ScreenRouter();
+        router = new ScreenRouter(logger);
+
         BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
 
         AppUserDAO userDAO = new AppUserDAO();
-        UserService userService = new UserService(userDAO);
+        UserService userService = new UserService(userDAO, logger);
 
         AccountDAO accountDAO = new AccountDAO();
-        AccountService accountService = new AccountService(accountDAO, userService);
+        AccountService accountService = new AccountService(accountDAO, userService, logger);
 
         TransactionsDAO transDAO = new TransactionsDAO();
-        TransactionService transactionService= new TransactionService(transDAO, accountService, userService);
+        TransactionService transactionService= new TransactionService(transDAO, accountService, userService, logger);
 
-         //TODO Determine which screens need the accountService and pass it in.
-        router.addScreen(new WelcomeScreen(consoleReader, router));
-        router.addScreen(new RegisterScreen(consoleReader, router, userService));
-        router.addScreen(new LoginScreen(consoleReader, router, userService));
-        router.addScreen(new DashboardScreen(consoleReader, router, userService));
-        router.addScreen((new BankAccountCreationScreen(consoleReader, router, userService, accountService)));
-        router.addScreen((new TransactionScreen(consoleReader, router, userService, accountService, transactionService)));
+        router.addScreen(new WelcomeScreen(consoleReader, router, logger));
+        router.addScreen(new RegisterScreen(consoleReader, router, userService, logger));
+        router.addScreen(new LoginScreen(consoleReader, router, userService, logger));
+        router.addScreen(new DashboardScreen(consoleReader, router, userService, logger));
+        router.addScreen((new BankAccountCreationScreen(consoleReader, router, userService, accountService, logger)));
+        router.addScreen((new TransactionScreen(consoleReader, router, userService, accountService, transactionService, logger)));
+
+        logger.log("Application initialized!");
 
     }
 
@@ -53,10 +61,11 @@ public class AppState {
         try {
             while (appRunning) {
                 router.navigate("/welcome");
+                logger.log("Initial navigation succeeded");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            } catch (Exception e) {
+               logger.log((e.getMessage()));
+            }
     }
 
     public static void shutdown() {

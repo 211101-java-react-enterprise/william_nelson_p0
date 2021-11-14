@@ -5,6 +5,7 @@ import com.revature.banking.Services.TransactionService;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
+import com.revature.banking.util.logging.Logger;
 
 import java.io.BufferedReader;
 
@@ -13,12 +14,14 @@ public class TransactionScreen extends Screen{
     private final AccountService accountService;
     private final UserService userService;
     private final TransactionService transactionService;
+    private final Logger logger;
 
-    public TransactionScreen(BufferedReader consoleReader, ScreenRouter router,UserService userService, AccountService accountService, TransactionService transactionService) {
+    public TransactionScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService, AccountService accountService, TransactionService transactionService, Logger logger) {
         super("TransactionScreen", "/Transactions", consoleReader, router);
         this.transactionService = transactionService;
         this.accountService = accountService;
         this.userService = userService;
+        this.logger = logger;
     }
 
     @Override
@@ -45,13 +48,15 @@ public class TransactionScreen extends Screen{
 
             String userSelection = consoleReader.readLine();
 
+            logger.log("Menu printed, user selected " + userSelection + ".");
+
             switch (userSelection) {
                 case "1":
                     try {
                         transactionService.getBalance(consoleReader, accountService);
                         successAndOrReturn();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.log(e.getMessage());
                     }
                     break;
 
@@ -60,7 +65,7 @@ public class TransactionScreen extends Screen{
                         transactionService.deposit(consoleReader, transactionService);
                         successAndOrReturn();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.log(e.getMessage());
                     }
                     break;
 
@@ -70,7 +75,7 @@ public class TransactionScreen extends Screen{
                         successAndOrReturn();
                     } catch (Exception e) {
                         System.out.println("Failure in the withdraw process, please try again");
-                        e.printStackTrace();
+                        logger.log(e.getMessage());
                     }
                     break;
 

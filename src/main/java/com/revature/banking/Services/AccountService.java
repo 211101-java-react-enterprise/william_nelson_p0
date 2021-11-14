@@ -1,4 +1,5 @@
 package com.revature.banking.Services;
+//TODO Test Casing to be implented and tried.
 
 import com.revature.banking.DAOS.AccountDAO;
 import com.revature.banking.Exceptions.AuthorizationException;
@@ -6,6 +7,7 @@ import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.Exceptions.ResourcePersistenceException;
 import com.revature.banking.models.Account;
 import com.revature.banking.util.collections.List;
+import com.revature.banking.util.logging.Logger;
 
 public class AccountService {
 
@@ -13,19 +15,24 @@ public class AccountService {
     //to have a link to the session user and user service functions.
     private final AccountDAO accountDAO;
     private final UserService userService;
+    private final Logger logger;
 
-    public AccountService(AccountDAO accountDAO, UserService userService) {
+    public AccountService(AccountDAO accountDAO, UserService userService, Logger logger) {
         this.accountDAO = accountDAO;
         this.userService = userService;
+        this.logger = logger;
     }
 
     //Get a list of accounts by owner ID
     public List<Account> findMyAccounts() {
 
         if (!userService.isSessionActive()) {
-            throw new AuthorizationException("No active user session to perform operation!");
+            String msg = "No active user session to perform operation!";
+            logger.logAndPrint(msg);
+            throw new AuthorizationException(msg);
         }
 
+        logger.log("Found Accounts by logged in user");
         return accountDAO.findAccountsByOwnerId(userService.getSessionUser().getId());
 
     }
@@ -34,27 +41,37 @@ public class AccountService {
     //Create New Account
     public void createNewAccount(Account newAccount) {
         if (!isAccountValid(newAccount)) {
-            throw new InvalidRequestException("Invalid Account Information");
+            String msg = "Invalid Account Information";
+            logger.logAndPrint(msg);
+            throw new InvalidRequestException(msg);
         }
 
         //Save the new account
         newAccount.setOwner(userService.getSessionUser());
-        Account createdAccount = accountDAO.save(newAccount); //Figure this out
+        Account createdAccount = accountDAO.save(newAccount);
+
+
 
         if (createdAccount == null){
-            throw new ResourcePersistenceException("Account could not be created!");
+            String msg = "Account could not be created!";
+            logger.logAndPrint(msg);
+            throw new ResourcePersistenceException(msg);
         }
+
+        logger.log("Account saved");
 
     }
 
     public void updateOldAccount (Account update_info) {
 
         if (!isAccountValid(update_info)){
-            throw new ResourcePersistenceException("Account could not be updated");
+            String msg = "Account could not be updated";
+            logger.logAndPrint(msg);
+            throw new ResourcePersistenceException(msg);
         }
+
         accountDAO.update(update_info);
-
-
+        logger.log("Account Updated");
     }
 
 

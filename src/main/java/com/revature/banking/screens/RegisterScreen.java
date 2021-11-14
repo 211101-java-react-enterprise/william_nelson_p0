@@ -1,11 +1,12 @@
 package com.revature.banking.screens;
 
-
+//TODO Finished
 import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.Exceptions.ResourcePersistenceException;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
+import com.revature.banking.util.logging.Logger;
 
 
 import java.io.BufferedReader;
@@ -14,11 +15,13 @@ public class RegisterScreen extends Screen {
 
     //Needs a field that stores a user.
     private final UserService userService;
+    private final Logger logger;
 
     //Constructor that calls the Screen Consturtero with SUPER, and then initializes the new field.
-    public RegisterScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService) {
+    public RegisterScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService, Logger logger) {
         super("RegisterScreen", "/register", consoleReader, router);
         this.userService = userService;
+        this.logger = logger;
     }
 
     //This function Prints and controls the console screen as the register screen
@@ -50,9 +53,9 @@ public class RegisterScreen extends Screen {
             userService.registerNewUser(newUser);
             System.out.println(newUser);
         } catch (InvalidRequestException e) {
-            System.out.println("You have provided invalid data. Please try again.");
+            logger.logAndPrint("You have provided invalid data. Please try again.");
         } catch (ResourcePersistenceException e) {
-            System.out.println("There was an issue when trying to persist the user to the datasource.");
+            logger.logAndPrint("There was an issue when trying to persist the user to the datasource.");
         }
 
 

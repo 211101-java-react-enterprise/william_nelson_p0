@@ -43,6 +43,12 @@ public class UserServiceTestSuite {
     }
 
     @Test
+    public void test_getSessionUser_returnsNull_given_No_Stored_SessionUser() {
+
+
+    }
+
+    @Test
     public void test_isUserValid_returnsTrue_givenValidUser() {
 
         // AAA pattern: Arrange, Act, Assert
@@ -65,6 +71,9 @@ public class UserServiceTestSuite {
         AppUser invalidUser_1 = new AppUser(null, "valid", "valid", "valid", "valid");
         AppUser invalidUser_2 = new AppUser("", "valid", "valid", "valid", "valid");
         AppUser invalidUser_3 = new AppUser("             ", "valid", "valid", "valid", "valid");
+        when(sut.isUserValid(invalidUser_1)).thenReturn(false);
+        when(sut.isUserValid(invalidUser_2)).thenReturn(false);
+        when(sut.isUserValid(invalidUser_3)).thenReturn(false);
 
         // Act
         boolean actualResult_1 = sut.isUserValid(invalidUser_1);
@@ -75,6 +84,8 @@ public class UserServiceTestSuite {
         Assert.assertFalse("Expected user to be considered false.", actualResult_1);
         Assert.assertFalse("Expected user to be considered false.", actualResult_2);
         Assert.assertFalse("Expected user to be considered false.", actualResult_3);
+        verify(mockUserDAO, times(0));
+
 
     }
 
@@ -93,6 +104,7 @@ public class UserServiceTestSuite {
 
         // Assert
         Assert.assertTrue("Expected result to be true with valid user provided.", actualResult);
+        verify(mockUserDAO, times(1)).save(validUser);
 
     }
 

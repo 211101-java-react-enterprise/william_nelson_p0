@@ -5,6 +5,7 @@ import com.revature.banking.models.AppUser;
 import com.revature.banking.util.database.ConnectionFactory;
 import com.revature.banking.util.collections.LinkedList;
 import com.revature.banking.util.collections.List;
+import com.revature.banking.util.logging.Logger;
 
 import java.sql.*;
 import java.util.UUID;

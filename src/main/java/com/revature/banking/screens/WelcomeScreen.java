@@ -1,11 +1,10 @@
 package com.revature.banking.screens;
 
-//TODO Add other options for getting to restore access screen
-
-
-
+//TODO DONE
 
 import com.revature.banking.util.ScreenRouter;
+import com.revature.banking.util.logging.Logger;
+
 import static com.revature.banking.util.AppState.shutdown;
 import java.io.BufferedReader;
 
@@ -13,8 +12,11 @@ import java.io.BufferedReader;
 
 public class WelcomeScreen extends Screen {
 
-    public WelcomeScreen(BufferedReader consoleReader, ScreenRouter router) {
+    private final Logger logger;
+
+    public WelcomeScreen(BufferedReader consoleReader, ScreenRouter router, Logger logger) {
         super("WelcomeScreen", "/welcome", consoleReader, router);
+        this.logger = logger;
     }
 
     @Override
@@ -28,6 +30,8 @@ public class WelcomeScreen extends Screen {
 
         String userSelection = consoleReader.readLine();
 
+        logger.log("Welcome Screen Rendered and user selected " + userSelection + ".");
+
         switch (userSelection) {
             case "1":
                 router.navigate("/login");
@@ -38,6 +42,7 @@ public class WelcomeScreen extends Screen {
             case "3":
                 System.out.println("Exiting application...");
                 shutdown();
+                logger.log("APPLICATION END ATTEMPTED APPROPRIATELY");
                 break;
             case "throw exception":
                 throw new RuntimeException(); // "throw" is used to explicitly throw an exception that will (hopefully) be handled elsewhere

@@ -1,10 +1,10 @@
 package com.revature.banking.screens;
-
+//TODO DONE
 import com.revature.banking.Exceptions.AuthenticationException;
 import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.Services.UserService;
-import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
+import com.revature.banking.util.logging.Logger;
 
 
 import java.io.BufferedReader;
@@ -13,10 +13,12 @@ public class LoginScreen extends Screen{
 
 
         private final UserService userService;
+        private final Logger logger;
 
-        public LoginScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService) {
+        public LoginScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService, Logger logger) {
             super("LoginScreen", "/login", consoleReader, router);
             this.userService = userService;
+            this.logger = logger;
         }
 
         @Override
@@ -28,11 +30,13 @@ public class LoginScreen extends Screen{
             System.out.print("Password > ");
             String password = consoleReader.readLine();
 
+            logger.log("User Credentials entered. Attempting Authentication");
+
             try {
                 userService.authenticateUser(username, password);
                 router.navigate("/dashboard");
             } catch (InvalidRequestException | AuthenticationException e) {
-                System.out.println(e.getMessage());
+                logger.logAndPrint(e.getMessage());
             }
 
         }

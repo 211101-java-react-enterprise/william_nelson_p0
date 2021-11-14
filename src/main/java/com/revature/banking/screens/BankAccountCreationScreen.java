@@ -1,6 +1,7 @@
 package com.revature.banking.screens;
-//TODO Create Accounts Table in DB. Write logic to find accounts by Username/Account#.
-// If able, Joint accounts by Usernames/Account#.
+
+//TODO DONE.
+
 import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.Exceptions.ResourcePersistenceException;
 import com.revature.banking.Services.AccountService;
@@ -8,6 +9,7 @@ import com.revature.banking.Services.UserService;
 import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
+import com.revature.banking.util.logging.Logger;
 
 import java.io.BufferedReader;
 
@@ -15,20 +17,25 @@ public class BankAccountCreationScreen extends Screen {
 
     private final UserService userService;
     private final AccountService accountService;
+    private final Logger logger;
 
 
-    public BankAccountCreationScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService, AccountService accountService) {
+    public BankAccountCreationScreen(BufferedReader consoleReader, ScreenRouter router, UserService userService, AccountService accountService, Logger logger) {
         super("AccountCreationScreen", "/AccountCreation", consoleReader, router);
         this.userService = userService;
         this.accountService = accountService;
+        this.logger = logger;
     }
 
     @Override
     public void render() throws Exception {
+        logger.log("Rendering Account Screen");
+        logger.log("Getting Session User");
         AppUser sessionUser = userService.getSessionUser();
 
         if (sessionUser == null) {
-            System.out.println("You are not currently logged in! Navigating to Login Screen");
+
+            logger.logAndPrint("You are not currently logged in! Navigating to Login Screen");
             router.navigate("/login");
             return;
         }
@@ -73,19 +80,23 @@ public class BankAccountCreationScreen extends Screen {
     }
 
     protected void accountCreationMachine(String type) throws Exception{
-        System.out.println("Creating new " + type +  " account");
+        logger.log("Creation Machine Starting...");
+        logger.logAndPrint("Creating new " + type +  " account");
         System.out.println("Please enter an account name!");
         String accountName = consoleReader.readLine();
+        logger.log("Account Name " + accountName + ". Nice!");
 
         Account newAccount = new Account(); //New account with zero balance no type.
         newAccount.setType(type);
         newAccount.setName(accountName);
 
+        logger.log("Dummy Account Created. Attempting to write to Database");
+
         try {
             accountService.createNewAccount(newAccount);
             successAndReturn();
         } catch (InvalidRequestException | ResourcePersistenceException e) {
-            System.out.println(e.getMessage());
+            logger.logAndPrint(e.getMessage());
         }
     }
 

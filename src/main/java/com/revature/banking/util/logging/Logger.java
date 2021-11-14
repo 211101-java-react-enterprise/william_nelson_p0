@@ -11,7 +11,7 @@ public class Logger {
     private static final String ANSI_YELLOW = "\u001B[33m";
 
     private static Logger logger;
-    private final boolean printToConsole;
+    private boolean printToConsole;
 
     private Logger(boolean printToConsole) {
         this.printToConsole = printToConsole;
@@ -43,7 +43,7 @@ public class Logger {
 
     public void log(String message, Object... args) {
 
-        try (Writer logWriter = new FileWriter("src/main/resources/logs/app.log", true)) {
+        try (Writer logWriter = new FileWriter("src/main/resources/logs/bankLog.log", true)) {
 
             String formattedMsg = String.format(message, args);
             logWriter.write(formattedMsg + "\n");
@@ -57,6 +57,29 @@ public class Logger {
         }
 
     }
+
+    public void logAndPrint(String message, Object... args) {
+
+        try (Writer logWriter = new FileWriter("src/main/resources/logs/bankLog.log", true)) {
+
+            String formattedMsg = String.format(message, args);
+            logWriter.write(formattedMsg + "\n");
+
+            this.printToConsole = true;
+
+            if (printToConsole) {
+                System.out.println(ANSI_YELLOW + formattedMsg + ANSI_RESET);
+            }
+
+            this.printToConsole = false;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
 
 }
