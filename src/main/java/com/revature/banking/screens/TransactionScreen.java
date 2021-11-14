@@ -1,10 +1,14 @@
 package com.revature.banking.screens;
 
+import com.revature.banking.DAOS.TransactionsDAO;
+import com.revature.banking.Exceptions.InvalidRequestException;
+import com.revature.banking.Exceptions.ResourcePersistenceException;
 import com.revature.banking.Services.AccountService;
 import com.revature.banking.Services.TransactionService;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
+import com.revature.banking.models.Transaction;
 import com.revature.banking.util.LinkedList;
 import com.revature.banking.util.List;
 import com.revature.banking.util.ScreenRouter;
@@ -51,31 +55,13 @@ public class TransactionScreen extends Screen{
 
             switch (userSelection) {
                 case "1":
-                    System.out.println("Check Balance");
-
-                    List<Account> accountList = accountService.findMyAccounts();
-                    System.out.println("Which balances do you want?");
-                    for (int i = 0; i < accountList.size(); i++) {
-                        System.out.println((i + 1) + " " + accountList.get(i).getName());
-                    }
-                    System.out.println("\nPlease select an number next to an account: ");
-                    int selection = Integer.parseInt(consoleReader.readLine());
-                    Double BalanceSelection = accountList.get((selection - 1)).getBalance();
-
-                    System.out.println("Selected Balance is: " + BalanceSelection);
+                    transactionService.getBalance(consoleReader, accountService);
                     successAndReturn();
                     break;
 
 
-
                 case "2":
-                    System.out.println("Deposit");
-                    //Logic
-                    //Get Account to remove from. Get Account to deposit too.
-                    //Verify user is on both accounts in some way.
-                    //Find Accounts in DB by Username and/or Status(Joint or Primary)
-                    //Get amount to move. Verify not negative or > account balance.
-                    //Change balances if data is good.
+                    transactionService.deposit(consoleReader, transactionService);
                     successAndReturn();
                     break;
 

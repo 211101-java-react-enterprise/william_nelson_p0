@@ -33,7 +33,7 @@ public class AccountDAO implements CrudDAO<Account> {
                account.setId(rs.getString("id"));
                account.setType(rs.getString("type"));
                account.setBalance(rs.getDouble("balance"));
-               accountCreator.setId(rs.getString("id"));
+               accountCreator.setId(rs.getString("owner_id"));
                accountCreator.setFirstName(rs.getString("first_name"));
                accountCreator.setLastName(rs.getString("last_name"));
                accountCreator.setEmail(rs.getString("email"));
@@ -130,16 +130,40 @@ public class AccountDAO implements CrudDAO<Account> {
 
         }
 
+    @Override
+    public boolean update(Account account) {
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = "update accounts set name = ?, type = ?, balance = ? where owner_id = ? and id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, account.getName());
+            pstmt.setString(2, account.getType());
+            pstmt.setDouble(3, account.getBalance());
+            pstmt.setString(4, account.getOwner().getId());
+            pstmt.setString(5, account.getId());
+
+            int rowsInserted = pstmt.executeUpdate();
+
+            if (rowsInserted != 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
+
+
 
     @Override
     public Account findById(String id) {
         return null;
     }
 
-    @Override
-    public boolean update(Account updatedObj) {
-        return false;
-    }
 
     @Override
     public boolean removeById(String id) {

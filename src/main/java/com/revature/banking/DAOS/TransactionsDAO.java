@@ -1,18 +1,50 @@
 package com.revature.banking.DAOS;
 
-import com.revature.banking.models.Account;
-import com.revature.banking.models.AppUser;
+
 import com.revature.banking.models.Transaction;
 import com.revature.banking.util.ConnectionFactory;
 import com.revature.banking.util.List;
 
 import java.sql.*;
+import java.util.UUID;
 
 public class TransactionsDAO implements CrudDAO<Transaction>{
+
     @Override //Write Transaction to database
-    public Transaction save(Transaction newObj) {
-        return null;
-    }
+    public Transaction save(Transaction newTran) {
+
+            try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+                //They will Give Account Type,
+                //User Session will have Owner id
+                //Need to Provide ID
+                //Create new Account ID
+                newTran.setId(UUID.randomUUID().toString());
+                newTran.setDate(new Timestamp(System.currentTimeMillis()).toString());
+
+
+                String sql = "insert into transactions (id, date, type, amount, newBalance, associated_account_id) values (?, ?, ?, ?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, newTran.getId());
+                pstmt.setString(2, newTran.getDate());
+                pstmt.setString(3, newTran.getType());
+                pstmt.setDouble(4, newTran.getAmount());
+                pstmt.setDouble(5, newTran.getNewBalance());
+                pstmt.setString(6, newTran.getOwner().getId());
+
+                int rowsInserted = pstmt.executeUpdate();
+
+                if (rowsInserted != 0) {
+                    return newTran;
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+
 
     @Override //Get Transaction List
     public List<Transaction> findAll() {
@@ -34,55 +66,10 @@ public class TransactionsDAO implements CrudDAO<Transaction>{
         return false;
     }
 
-    //Show all Transactions
-    //List collection Function.
-
-
-
-
-    //Get Balance from Current Account(AccountDAO should have Account and User available.)
-    //TransactionDAO holding account dao which is holding user dao which has a user
-    public Double getBalance (String accountId){
-        //Create Data Coalating Objects
-        Double balance = 0.0;
-
-        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
-
-
-        String sql = "select * from accounts where id = ?";
-        PreparedStatement pstmt = conn.prepareStatement("sql");
-        pstmt.setString(1, accountId );
-        ResultSet rs = pstmt.executeQuery(sql);
-        balance = rs.getDouble("Balance");
-        //Display Account Types and Balances
-
-
-            /*
-            *   private String id;
-                private String date;
-                private String account_id;
-                private String transactor_name;
-                private String type;
-                private Double amount;*/
-
-    } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    return balance;
-    }
-
-    //Try a network connection
-    //Prepare view statement
-    //Display Account Types and Balances
-
 
 
     //Withdrawl
 
-
-
-    //Deposit
 
 
 

@@ -47,6 +47,16 @@ public class AccountService {
 
     }
 
+    public void updateOldAccount (Account update_info) {
+
+        if (!isAccountValid(update_info)){
+            throw new ResourcePersistenceException("Account could not be updated");
+        }
+        accountDAO.update(update_info);
+
+
+    }
+
 
 
    //Just checking that an account type has been selected.
