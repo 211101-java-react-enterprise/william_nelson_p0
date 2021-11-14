@@ -5,6 +5,7 @@ import com.revature.banking.DAOS.AppUserDAO;
 import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.models.AppUser;
+import com.revature.banking.util.logging.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +21,7 @@ public class UserServiceTestSuite {
 
     UserService sut;
     AppUserDAO mockUserDAO;
+    Logger logger = new Logger(false);
 
     /*
         JUnit Annotations
@@ -34,7 +36,8 @@ public class UserServiceTestSuite {
     @Before
     public void testCaseSetup() {
         mockUserDAO = mock(AppUserDAO.class);
-        sut = new UserService(mockUserDAO);
+        sut = new UserService(mockUserDAO, logger);
+
     }
 
     @After

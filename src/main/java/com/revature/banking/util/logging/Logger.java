@@ -13,7 +13,7 @@ public class Logger {
     private static Logger logger;
     private boolean printToConsole;
 
-    private Logger(boolean printToConsole) {
+    public Logger(boolean printToConsole) {
         this.printToConsole = printToConsole;
     }
 
