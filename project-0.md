@@ -8,17 +8,17 @@ For Project 0, you will be building a console-based application that will be pre
 
 ### User Stories
 As a user, I can:
-- [ ] register a new user account with the system (must be secured with a password)
-- [ ] login with my existing credentials
-- [ ] create at least one account
-- [ ] deposit funds into an account (use doubles, not ints)
-- [ ] withdraw funds from an account (no overdrafting!)
-- [ ] view the balance of my account(s) (all balance displays must be in proper currency format)
+- [Y] register a new user account with the system (must be secured with a password)
+- [Y] login with my existing credentials
+- [Y] create at least one account
+- [Y] deposit funds into an account (use doubles, not ints)
+- [Y] withdraw funds from an account (no overdrafting!)
+- [Y] view the balance of my account(s) (all balance displays must be in proper currency format)
 
 ### Suggested Bonus User Stories
 As a user I can:
 - [ ] view the transaction history for an account
-- [ ] create multiple accounts per user (checking, savings, etc.)
+- [Y] create multiple accounts per user (checking, savings, etc.)
 - [ ] share a joint account with another user
 - [ ] transfer money between accounts
 
@@ -58,26 +58,26 @@ Send your project concept descriptions to your trainer via Slack and await conce
 
 All project concepts must display the following domain-independent features/requirements:
  
-- [ Y] Use of custom data structures (do not use java.com.revature.banking.util Collection types!)
-- [Y ] Basic validation of user input (e.g. no registration for classes outside of registration window, no negative deposits/withdrawals, no overdrafting, etc.) 
-- [ ] Unit tests for all business-logic classes
-- [ Y] All exceptions are properly caught and handled
-- [Y ] Proper use of OOP principles
-- [ ] Documentation (all classes and methods have basic documentation)
-- [ ] Database is 3rd Normal Form Compliant
-- [ Y] Referential integrity (e.g. if a class is removed from the catalog, no students should be registered for it)
-- [ ] Logging messages and exceptions to a file using a custom logger
-- [ ] Generation of basic design documents (e.g. relational diagram, class diagram, flows, etc.)
+- [Y] Use of custom data structures (do not use java.com.revature.banking.util Collection types!)
+- [Y] Basic validation of user input (e.g. no registration for classes outside of registration window, no negative deposits/withdrawals, no overdrafting, etc.) 
+- [N] Unit tests for all business-logic classes
+- [Y] All exceptions are properly caught and handled
+- [Y] Proper use of OOP principles
+- [Y] Documentation (all classes and methods have basic documentation)
+- [Y] Database is 3rd Normal Form Compliant
+- [Y] Referential integrity (e.g. if a class is removed from the catalog, no students should be registered for it)
+- [Y] Logging messages and exceptions to a file using a custom logger
+- [Y] Generation of basic design documents (e.g. relational diagram, class diagram, flows, etc.)
 
 
 ## Tech Stack
 
 Regardless of the project concept you choose, you will be required to adhere to the following tech stack:
 
-- [ ] Java 8
-- [ ] Apache Maven
-- [ ] PostgreSQL (hosted on AWS RDS)
-- [ ] Git SCM (hosted on GitHub)
+- [Y] Java 8
+- [Y] Apache Maven
+- [Y] PostgreSQL (hosted on AWS RDS)
+- [Y] Git SCM (hosted on GitHub)
 
 
 ## Repo Instructions

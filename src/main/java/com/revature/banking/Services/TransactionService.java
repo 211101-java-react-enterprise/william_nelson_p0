@@ -39,19 +39,29 @@ public class TransactionService {
         System.out.println("Check Balance");
         List<Account> accountList = accountService.findMyAccounts();
 
-        System.out.println("Which balances do you want?");
-        for (int i = 0; i < accountList.size(); i++) {
-            System.out.println((i + 1) + " " + accountList.get(i).getName());
-        }
+        boolean loopIfIncorrectSelection = false;
 
-        System.out.println("\nPlease select an number next to an account: ");
+        do {
+            System.out.println("Which balances do you want?");
+            for (int i = 0; i < accountList.size(); i++) {
+                System.out.println((i + 1) + " " + accountList.get(i).getName());
+            }
 
-        int selection = Integer.parseInt(consoleReader.readLine());
+            System.out.println("\nPlease select an number next to an account: ");
+            int selection = Integer.parseInt(consoleReader.readLine());
 
-        Double BalanceSelection = accountList.get((selection - 1)).getBalance();
+            if (selection > accountList.size()) {
+                System.out.println("Please select a number that corresponds to an account on the list");
+                loopIfIncorrectSelection = true;
+            } else {
+                Double BalanceSelection = accountList.get((selection - 1)).getBalance();
 
-        System.out.println("Selected Balance is: " + BalanceSelection);
-        logger.log("Balance Check Successful");
+                System.out.println("Selected Balance is: " + BalanceSelection);
+                logger.log("Balance Check Successful");
+                loopIfIncorrectSelection = false;
+            }
+        } while (loopIfIncorrectSelection = true);
+
     }
 
 
