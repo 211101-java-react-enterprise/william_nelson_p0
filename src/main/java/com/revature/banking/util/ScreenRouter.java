@@ -5,7 +5,7 @@ package com.revature.banking.util;
 //TODO Finished?
 
 import com.revature.banking.screens.Screen;
-import com.revature.banking.util.LinkedList;
+import com.revature.banking.util.collections.LinkedList;
 
 public class ScreenRouter {
     //List of Screens the App Can use with routing and rendering

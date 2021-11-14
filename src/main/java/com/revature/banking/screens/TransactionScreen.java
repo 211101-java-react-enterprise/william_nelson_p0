@@ -1,18 +1,10 @@
 package com.revature.banking.screens;
 
-import com.revature.banking.DAOS.TransactionsDAO;
-import com.revature.banking.Exceptions.InvalidRequestException;
-import com.revature.banking.Exceptions.ResourcePersistenceException;
 import com.revature.banking.Services.AccountService;
 import com.revature.banking.Services.TransactionService;
 import com.revature.banking.Services.UserService;
-import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
-import com.revature.banking.models.Transaction;
-import com.revature.banking.util.LinkedList;
-import com.revature.banking.util.List;
 import com.revature.banking.util.ScreenRouter;
-import sun.awt.image.ImageWatched;
 
 import java.io.BufferedReader;
 
@@ -55,47 +47,46 @@ public class TransactionScreen extends Screen{
 
             switch (userSelection) {
                 case "1":
-                    transactionService.getBalance(consoleReader, accountService);
-                    successAndReturn();
+                    try {
+                        transactionService.getBalance(consoleReader, accountService);
+                        successAndOrReturn();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
 
-
                 case "2":
-                    transactionService.deposit(consoleReader, transactionService);
-                    successAndReturn();
+                    try {
+                        transactionService.deposit(consoleReader, transactionService);
+                        successAndOrReturn();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
 
                 case "3":
-                    System.out.println("Withdraw selected");
-                    //Logic
-                    //Get account type and status to withdraw from
-                    //find related accounts, if none handle logic
-                    //Display balance and request amount to withdraw
-                    //verify non-negative
-                    //verify not greater than current balance
-                    //do math
-                    //write to database
-                   successAndReturn();
+                    try {
+                        transactionService.withdraw(consoleReader, transactionService);
+                        successAndOrReturn();
+                    } catch (Exception e) {
+                        System.out.println("Failure in the withdraw process, please try again");
+                        e.printStackTrace();
+                    }
                     break;
 
                 case "4":
                     System.out.println("Returning to Dashboard");
                     router.navigate("/dashboard");
-                    successAndReturn();
                     break;
 
-                case "5":
-                    System.out.println("Returning to Dashboard");
-                    router.navigate("/dashboard");
-                    break;
                 default:
                     System.out.println("The user made an invalid selection");
             }
         }
     }
 
-    protected void successAndReturn() throws Exception{
-        System.out.println("Transaction successful, continue? Y/N?");
+    protected void successAndOrReturn() throws Exception{
+        System.out.println("Transaction concluded, do you want to transact again? Y/N?");
         String transactAgain = consoleReader.readLine();
         if (transactAgain.equals("Y") || (transactAgain.equals("y")) || (transactAgain.equals("yes")) || (transactAgain.equals("YES"))) {
             System.out.println("Returning to Transactions");

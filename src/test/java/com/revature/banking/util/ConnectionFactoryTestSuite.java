@@ -1,7 +1,7 @@
 package com.revature.banking.util;
 
 
-import com.revature.banking.util.ConnectionFactory;
+import com.revature.banking.util.database.ConnectionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,5 +1,7 @@
-package com.revature.banking.util;
+package com.revature.banking.util.collections;
 
+
+import com.revature.banking.util.collections.List;
 
 //TODO Not Finished
 public class LinkedList<T> implements List<T> {

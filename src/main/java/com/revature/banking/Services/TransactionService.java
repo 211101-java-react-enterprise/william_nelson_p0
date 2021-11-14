@@ -8,13 +8,13 @@ package com.revature.banking.Services;
 
 import com.revature.banking.DAOS.TransactionsDAO;
 import com.revature.banking.Exceptions.InputErrorException;
+import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.models.Account;
 import com.revature.banking.models.Transaction;
-import com.revature.banking.util.List;
+import com.revature.banking.util.collections.List;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.Buffer;
 
 public class TransactionService {
 
@@ -29,11 +29,6 @@ public class TransactionService {
         this.userService = userService;
     }
 
-
-  /*  //Validate Transaction Data
-    public boolean isTransactionValid(Transaction tran){
-        return (tran != null);
-    } */
 
     public void getBalance(BufferedReader consoleReader, AccountService accountService) throws Exception {
 
@@ -74,14 +69,6 @@ public class TransactionService {
         return true;
 
 
-
-       /* A double is not always an exact representation. You can only say how many decimal places you would have if you converted it to a String.
-
-        double d= 234.12413;
-        String text = Double.toString(Math.abs(d));
-        int integerPlaces = text.indexOf('.');
-        int decimalPlaces = text.length() - integerPlaces - 1;*/
-
     }
 
     public void deposit (BufferedReader consoleReader, TransactionService transactionService) throws IOException {
@@ -91,9 +78,7 @@ public class TransactionService {
 
         //Print List of Accounts to be deposited into.
         System.out.println("Which Account do you want to deposit into?");
-        for (int i = 0; i < accountList.size(); i++) {
-            System.out.println((i + 1) + " " + accountList.get(i).getName());
-        }
+        displayAccounts(accountList);
 
         //Get User Selection
         System.out.println("\nPlease select an number next to an account: ");
@@ -143,6 +128,100 @@ public class TransactionService {
         } while (depositSuccess = false);
 
     }
+
+
+    public void withdraw (BufferedReader consoleReader, TransactionService transactionService) throws Exception {
+        System.out.println("Withdraw initiated!");
+        //Get Account.
+        List<Account> accountList = accountService.findMyAccounts();
+
+        //Print List of Accounts to be deposited into.
+        displayAccounts(accountList);
+
+        //Get User Selection
+        int selection = userSelection(consoleReader);
+
+        //Find Appropriate Balance and print it.
+        Double BalanceSelection = accountList.get((selection - 1)).getBalance();
+        System.out.println("Selected Balance is: " + BalanceSelection);
+
+        //Request Update Withdrawal Amount
+        System.out.println("How much do you want to withdraw? :  ");
+        Double withdrawAmount = Double.parseDouble(consoleReader.readLine());
+        //Check for Valid Withdraw amount
+
+        boolean withdrawSuccess = false;
+            do {
+                try {
+                    if (withdrawAmount == 0) {
+                        System.out.println("Zero Amount selected");
+                        System.out.println("Rerouting to Transaction Menu");
+                        withdrawSuccess = true; //Break loop
+                    } else if (transactionService.isWithdrawAmountValid(withdrawAmount, BalanceSelection) && (withdrawAmount != 0)) {
+                        Double withdrawTotal = BalanceSelection - withdrawAmount;
+
+                        //Make and Configure account object.
+                        Transaction newTran = new Transaction();
+                        newTran.setOwner(userService.getSessionUser());
+                        newTran.setType("Withdraw");
+                        newTran.setAmount(withdrawAmount);
+                        newTran.setNewBalance(withdrawTotal);
+                        newTran.setAccount(accountList.get(selection - 1));
+                        newTran.setOwner(accountList.get(selection - 1).getOwner());
+
+                        Transaction processedTransaction = transactionDAO.save(newTran);
+                        //Should be written to DB now. Update the balance on the account
+                        Account updaterAccount = accountList.get(selection - 1);
+                        updaterAccount.setBalance(withdrawTotal);
+                        accountService.updateOldAccount(updaterAccount);
+                        withdrawSuccess = true; //Break Loop
+                    } else {
+                        System.out.println("Error in withdraw process");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } while (withdrawSuccess = false);
+
+        }
+
+    private boolean isWithdrawAmountValid(Double amount, Double currentBalance) {
+        if (amount == null || amount < 0 || currentBalance == 0 || currentBalance < 0) return false;
+        if (amount > 0)
+        {
+            //Check Valid Number
+            String text = Double.toString(Math.abs(amount));
+            int integerPlaces = text.indexOf('.');
+            int decimalPlaces = text.length() - integerPlaces - 1;
+
+            //If not Valid
+            if(decimalPlaces > 2) {
+                throw new InputErrorException("Please use correct format of $####.## when entering values");
+            } else if (currentBalance - amount < 0) {
+                throw new InvalidRequestException("Amount selected would result in overdrawing, canceling transaction");
+            }
+
+        }
+        return true;
+    }
+
+    public void displayAccounts(List<Account> accountList){
+        for (int i = 0; i < accountList.size(); i++) {
+            System.out.println((i + 1) + " " + accountList.get(i).getName());
+        }
+    }
+
+    public int userSelection(BufferedReader consoleReader) throws Exception {
+        System.out.println("\nPlease select an number next to an account: ");
+        int selection = Integer.parseInt(consoleReader.readLine());
+
+        return selection;
+    }
+
+
+
+
 }
 
 

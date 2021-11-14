@@ -2,9 +2,9 @@ package com.revature.banking.DAOS;
 
 import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
-import com.revature.banking.util.ConnectionFactory;
-import com.revature.banking.util.LinkedList;
-import com.revature.banking.util.List;
+import com.revature.banking.util.database.ConnectionFactory;
+import com.revature.banking.util.collections.LinkedList;
+import com.revature.banking.util.collections.List;
 
 import java.sql.*;
 import java.util.UUID;
@@ -164,6 +164,7 @@ public class AccountDAO implements CrudDAO<Account> {
         return null;
     }
 
+    //Maybe Implement, Maybe not an online feature. Ask Wezley
 
     @Override
     public boolean removeById(String id) {

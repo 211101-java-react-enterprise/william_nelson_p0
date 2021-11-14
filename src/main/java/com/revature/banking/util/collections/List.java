@@ -1,6 +1,6 @@
-package com.revature.banking.util;
+package com.revature.banking.util.collections;
 
-import com.revature.banking.util.Collection;
+import com.revature.banking.util.collections.Collection;
 
 /**
  * Interfaces

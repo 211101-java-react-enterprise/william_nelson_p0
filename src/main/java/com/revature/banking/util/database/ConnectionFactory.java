@@ -1,4 +1,4 @@
-package com.revature.banking.util;
+package com.revature.banking.util.database;
 
 //TODO Review logic and commit to memory
 

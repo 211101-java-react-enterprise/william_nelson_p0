@@ -2,8 +2,8 @@ package com.revature.banking.DAOS;
 
 
 import com.revature.banking.models.Transaction;
-import com.revature.banking.util.ConnectionFactory;
-import com.revature.banking.util.List;
+import com.revature.banking.util.database.ConnectionFactory;
+import com.revature.banking.util.collections.List;
 
 import java.sql.*;
 import java.util.UUID;

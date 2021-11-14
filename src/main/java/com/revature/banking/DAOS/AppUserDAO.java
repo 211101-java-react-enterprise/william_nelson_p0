@@ -3,10 +3,9 @@ package com.revature.banking.DAOS;
 
 
 import com.revature.banking.models.AppUser;
-import com.revature.banking.util.ConnectionFactory;
-import com.revature.banking.util.List;
+import com.revature.banking.util.database.ConnectionFactory;
+import com.revature.banking.util.collections.List;
 
-import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

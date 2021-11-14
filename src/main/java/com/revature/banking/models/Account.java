@@ -1,7 +1,5 @@
 package com.revature.banking.models;
 
-import com.revature.banking.util.LinkedList;
-
 import java.util.Objects;
 
 
