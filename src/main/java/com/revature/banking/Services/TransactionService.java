@@ -101,14 +101,29 @@ public class TransactionService {
             System.out.println("Which Account do you want to deposit into?");
             displayAccounts(accountList);
 
-            //Get User Selection
-            System.out.println("\nPlease select an number next to an account: ");
-            int selection = Integer.parseInt(consoleReader.readLine());
 
+            //get user selection
+            String str = consoleReader.readLine();
+            int selection = -1;
+            boolean valid_int = selectionValidation(str);
+
+            if (valid_int){
+                selection = Integer.parseInt(str);
+            }
+            else {
+                logger.logAndPrint("Selection Invalid, rerouting to list of accounts.");
+            }
+
+            //Should not run unless int_valid
             if (selection > accountList.size()) {
                 System.out.println("Please select a number that corresponds to an account on the list");
                 loopIfIncorrectSelection = true;
-            } else {
+            }else if (selection <= 0)
+            {
+                System.out.println("Please select a number that corresponds to an account on the list");
+                loopIfIncorrectSelection = true;
+            }
+            else {
                 //Find Appropriate Balance and print it.
                 Double BalanceSelection = accountList.get((selection - 1)).getBalance();
                 System.out.println("Selected Balance is: " + BalanceSelection);
@@ -158,8 +173,17 @@ public class TransactionService {
             //Print List of Accounts to be deposited into.
             displayAccounts(accountList);
 
-            //Get User Selection
-            int selection = Integer.parseInt(consoleReader.readLine());
+            //get user selection
+            String str = consoleReader.readLine();
+            int selection = -1;
+            boolean valid_int = selectionValidation(str);
+
+            if (valid_int){
+                selection = Integer.parseInt(str);
+            }
+            else {
+                logger.logAndPrint("Selection Invalid, rerouting to list of accounts.");
+            }
 
             if (selection > accountList.size()) {
                 System.out.println("Please select a number that corresponds to an account on the list");
@@ -234,17 +258,21 @@ public class TransactionService {
         }
     }
 
-    public int userSelection(BufferedReader consoleReader) throws Exception {
-        System.out.println("\nPlease select an number next to an account: ");
-        int selection = Integer.parseInt(consoleReader.readLine());
-
-        return selection;
+    //Function to ensure a string given is an int and that it can be used in Integer.parseInt
+    public boolean selectionValidation(String argStr) {
+        try {
+            @SuppressWarnings("unused")
+            int x = Integer.parseInt(argStr);
+            return true; //String is an Integer
+        } catch (NumberFormatException e) {
+            return false; //String is not an Integer
+        }
     }
 
 
-
-
 }
+
+
 
 
 
