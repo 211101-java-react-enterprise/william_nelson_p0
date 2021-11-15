@@ -54,29 +54,30 @@ public class TransactionScreen extends Screen{
                 case "1":
                     try {
                         transactionService.getBalance(consoleReader, accountService);
-                        successAndOrReturn();
                     } catch (Exception e) {
                         logger.log(e.getMessage());
                     }
+                    successAndOrReturn();
                     break;
 
                 case "2":
                     try {
                         transactionService.deposit(consoleReader, transactionService);
-                        successAndOrReturn();
                     } catch (Exception e) {
                         logger.log(e.getMessage());
                     }
+
+                    successAndOrReturn();
                     break;
 
                 case "3":
                     try {
                         transactionService.withdraw(consoleReader, transactionService);
-                        successAndOrReturn();
                     } catch (Exception e) {
                         System.out.println("Failure in the withdraw process, please try again");
                         logger.log(e.getMessage());
                     }
+                    successAndOrReturn();
                     break;
 
                 case "4":
@@ -87,19 +88,12 @@ public class TransactionScreen extends Screen{
                 default:
                     System.out.println("The user made an invalid selection");
             }
+            router.navigate("/dashboard");
         }
     }
 
     protected void successAndOrReturn() throws Exception{
-        System.out.println("Transaction concluded, do you want to transact again? Y/N?");
-        String transactAgain = consoleReader.readLine();
-        if (transactAgain.equals("Y") || (transactAgain.equals("y")) || (transactAgain.equals("yes")) || (transactAgain.equals("YES"))) {
-            System.out.println("Returning to Transactions");
-        } else {
-            System.out.println("Returning to dashboard.");
-            router.navigate("/dashboard");
-        }
-
+        System.out.println("Transaction concluded, returning to dashboard!");
     }
 
 }

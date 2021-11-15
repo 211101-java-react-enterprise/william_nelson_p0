@@ -146,10 +146,18 @@ public class TransactionService {
                         newTran.setOwner(accountList.get(selection - 1).getOwner());
                         Transaction processedTransaction = transactionDAO.save(newTran);
 
-                        //Should be written to DB now. Update the balance on the account
-                        Account updaterAccount = accountList.get(selection - 1);
+                        Account updaterAccount = new Account();
                         updaterAccount.setBalance(depositTotal);
+                        updaterAccount.setType(accountList.get(selection - 1).getType());
+                        updaterAccount.setId(accountList.get(selection - 1).getId());
+                        updaterAccount.setName(accountList.get(selection - 1).getName());
+                        updaterAccount.setOwner(accountList.get(selection - 1).getOwner());
+
+                        //Update working list.
+                        accountList.get(selection - 1).setBalance(depositTotal);
+                        //Push Update
                         accountService.updateOldAccount(updaterAccount);
+
                         logger.log("Deposit Successful");
 
                     } else {
@@ -212,9 +220,18 @@ public class TransactionService {
 
                     Transaction processedTransaction = transactionDAO.save(newTran);
                     //Should be written to DB now. Update the balance on the account
-                    Account updaterAccount = accountList.get(selection - 1);
+                    Account updaterAccount = new Account();
                     updaterAccount.setBalance(withdrawTotal);
+                    updaterAccount.setType(accountList.get(selection - 1).getType());
+                    updaterAccount.setId(accountList.get(selection - 1).getId());
+                    updaterAccount.setName(accountList.get(selection - 1).getName());
+                    updaterAccount.setOwner(accountList.get(selection - 1).getOwner());
+
+                    //Update working list.
+                    accountList.get(selection - 1).setBalance(withdrawTotal);
+                    //Push Update
                     accountService.updateOldAccount(updaterAccount);
+
                 } else {
                     logger.logAndPrint("Error in withdraw process.");
                     logger.logAndPrint("Returning to transactions.");
@@ -268,7 +285,6 @@ public class TransactionService {
             return false; //String is not an Integer
         }
     }
-
 
 }
 
