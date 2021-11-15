@@ -2,6 +2,7 @@ package com.revature.banking.services;
 
 
 import com.revature.banking.DAOS.AppUserDAO;
+import com.revature.banking.Exceptions.AuthenticationException;
 import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.Services.UserService;
 import com.revature.banking.models.AppUser;
@@ -74,9 +75,6 @@ public class UserServiceTestSuite {
         AppUser invalidUser_1 = new AppUser(null, "valid", "valid", "valid", "valid");
         AppUser invalidUser_2 = new AppUser("", "valid", "valid", "valid", "valid");
         AppUser invalidUser_3 = new AppUser("             ", "valid", "valid", "valid", "valid");
-        when(sut.isUserValid(invalidUser_1)).thenReturn(false);
-        when(sut.isUserValid(invalidUser_2)).thenReturn(false);
-        when(sut.isUserValid(invalidUser_3)).thenReturn(false);
 
         // Act
         boolean actualResult_1 = sut.isUserValid(invalidUser_1);
@@ -87,8 +85,6 @@ public class UserServiceTestSuite {
         Assert.assertFalse("Expected user to be considered false.", actualResult_1);
         Assert.assertFalse("Expected user to be considered false.", actualResult_2);
         Assert.assertFalse("Expected user to be considered false.", actualResult_3);
-        verify(mockUserDAO, times(0));
-
 
     }
 
@@ -110,6 +106,35 @@ public class UserServiceTestSuite {
         verify(mockUserDAO, times(1)).save(validUser);
 
     }
+
+    @Test (expected = InvalidRequestException.class)
+    public void test_authenticateUser_throwsException_givenInvalidUsernameAndPassword(){
+        // Arrange
+        String username = "";
+        String password = "";
+        String username_2 = null;
+
+        // Act
+        try{
+            sut.authenticateUser(username, password);
+        } finally {
+            verify(mockUserDAO, times(0)).findUserByUsernameAndPassword(username, password);
+        }
+
+        try{
+            sut.authenticateUser(username_2, password);
+        } finally {
+            verify(mockUserDAO, times(0)).findUserByUsernameAndPassword(username_2, password);
+        }
+
+        // Assert
+        //What would go here. The test is working. Just a printed out message?
+
+    }
+
+
+
+
 
     @Test
     public void test_registerNewUser_throwsResourcePersistenceException_givenValidUserWithTakenUsername() {

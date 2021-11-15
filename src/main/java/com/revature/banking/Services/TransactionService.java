@@ -8,8 +8,6 @@ package com.revature.banking.Services;
 
 
 import com.revature.banking.DAOS.TransactionsDAO;
-import com.revature.banking.Exceptions.InputErrorException;
-import com.revature.banking.Exceptions.InvalidRequestException;
 import com.revature.banking.models.Account;
 import com.revature.banking.models.Transaction;
 import com.revature.banking.util.collections.List;
@@ -39,29 +37,45 @@ public class TransactionService {
         System.out.println("Check Balance");
         List<Account> accountList = accountService.findMyAccounts();
 
-        boolean loopIfIncorrectSelection = false;
+        if (accountList.size() == 0){
+            logger.logAndPrint("No accounts found");
+        }
 
-        do {
-            System.out.println("Which balances do you want?");
-            for (int i = 0; i < accountList.size(); i++) {
-                System.out.println((i + 1) + " " + accountList.get(i).getName());
-            }
+        else{
 
-            System.out.println("\nPlease select an number next to an account: ");
-            int selection = Integer.parseInt(consoleReader.readLine());
+            boolean loopIfIncorrectSelection = false;
 
-            if (selection > accountList.size()) {
-                System.out.println("Please select a number that corresponds to an account on the list");
-                loopIfIncorrectSelection = true;
-            } else {
-                Double BalanceSelection = accountList.get((selection - 1)).getBalance();
+            do {
+                System.out.println("Which balances do you want?");
+                for (int i = 0; i < accountList.size(); i++) {
+                    System.out.println((i + 1) + " " + accountList.get(i).getName());
+                }
 
-                System.out.println("Selected Balance is: " + BalanceSelection);
-                logger.log("Balance Check Successful");
-                loopIfIncorrectSelection = false;
-            }
-        } while (loopIfIncorrectSelection == true);
+                System.out.println("\nPlease select an number next to an account: ");
+                int selection = -1; //Dummy int
+                String str = consoleReader.readLine(); //Get String
+                boolean valid_int = selectionIntegerValidation(str); //Check Validity
 
+                if (valid_int){
+                    selection = Integer.parseInt(str);
+                }
+                else {
+                    logger.logAndPrint("Selection Invalid, rerouting to list of accounts.");
+                }
+
+
+                if (selection > accountList.size() || selection < 0) {
+                    System.out.println("Please select a number that corresponds to an account on the list");
+                    loopIfIncorrectSelection = true;
+                } else {
+                    Double BalanceSelection = accountList.get((selection - 1)).getBalance();
+
+                    System.out.println("Selected Balance is: " + BalanceSelection);
+                    logger.log("Balance Check Successful");
+                    loopIfIncorrectSelection = false;
+              }
+            } while (loopIfIncorrectSelection == true);
+        }
     }
 
 
@@ -93,47 +107,55 @@ public class TransactionService {
         //Get Account.
         List<Account> accountList = accountService.findMyAccounts();
 
-        boolean loopIfIncorrectSelection = false;
+        if (accountList.size() == 0){
+            logger.logAndPrint("No accounts found, please create an account first!");
+        } else {
+            boolean loopIfIncorrectSelection = false;
 
-        do {
+            do {
 
-            //Print List of Accounts to be deposited into.
-            System.out.println("Which Account do you want to deposit into?");
-            displayAccounts(accountList);
+                //Print List of Accounts to be deposited into.
+                System.out.println("Which Account do you want to deposit into?");
+                displayAccounts(accountList);
 
 
-            //get user selection
-            String str = consoleReader.readLine();
-            int selection = -1;
-            boolean valid_int = selectionValidation(str);
+                //get user selection
+                String str = consoleReader.readLine();
+                int selection = -1;
+                boolean valid_int = selectionIntegerValidation(str);
 
-            if (valid_int){
-                selection = Integer.parseInt(str);
-            }
-            else {
-                logger.logAndPrint("Selection Invalid, rerouting to list of accounts.");
-            }
+                if (valid_int) {
+                    selection = Integer.parseInt(str);
+                } else {
+                    logger.logAndPrint("Selection Invalid, rerouting to list of accounts.");
+                }
 
-            //Should not run unless int_valid
-            if (selection > accountList.size()) {
-                System.out.println("Please select a number that corresponds to an account on the list");
-                loopIfIncorrectSelection = true;
-            }else if (selection <= 0)
-            {
-                System.out.println("Please select a number that corresponds to an account on the list");
-                loopIfIncorrectSelection = true;
-            }
-            else {
-                //Find Appropriate Balance and print it.
-                Double BalanceSelection = accountList.get((selection - 1)).getBalance();
-                System.out.println("Selected Balance is: " + BalanceSelection);
+                //Should not run unless int_valid
+                if (selection > accountList.size()) {
+                    System.out.println("Please select a number that corresponds to an account on the list");
+                    loopIfIncorrectSelection = true;
+                } else if (selection <= 0) {
+                    System.out.println("Please select a number that corresponds to an account on the list");
+                    loopIfIncorrectSelection = true;
+                } else {
+                    //Find Appropriate Balance and print it.
+                    Double BalanceSelection = accountList.get((selection - 1)).getBalance();
+                    System.out.println("Selected Balance is: " + BalanceSelection);
 
-                //Request Update Deposit Ammount
-                System.out.println("How much do you want to deposit? :  ");
-                Double depositAmount = Double.parseDouble(consoleReader.readLine());
-                //Check for Valid Deposit ammount
+                    //Request Update Deposit Ammount
+                    System.out.println("How much do you want to deposit? :  ");
 
-                 if (transactionService.isDepositAmountValid(depositAmount) && (depositAmount != 0)) {
+                    String stringGiven = consoleReader.readLine();
+                    boolean validDouble = doubleFormantValidation(stringGiven);
+                    double depositAmount = 0.00;
+
+                    if (validDouble) {
+                        depositAmount = Double.parseDouble(consoleReader.readLine());
+                        //Check what they gave me is not outside the scope of a double in money format
+                        //Check for Valid Withdraw amount
+                    }
+
+                    if (transactionService.isDepositAmountValid(depositAmount) && (depositAmount != 0)) {
                         Double depositTotal = depositAmount + BalanceSelection;
 
                         //Make and Configure account object.
@@ -163,9 +185,10 @@ public class TransactionService {
                     } else {
                         logger.logAndPrint("Error in deposit process");
                     }
-                 loopIfIncorrectSelection = false; //Break loop
-            }
-        } while (loopIfIncorrectSelection == true);
+                    loopIfIncorrectSelection = false; //Break loop
+                }
+            } while (loopIfIncorrectSelection == true);
+        }
         logger.log("End of Deposit");
     }
 
@@ -175,72 +198,85 @@ public class TransactionService {
         //Get Account.
         List<Account> accountList = accountService.findMyAccounts();
 
-        boolean loopIfIncorrectSelection = false;
+        if (accountList.size() == 0){
+            logger.logAndPrint("No accounts found, please create an account first!");
+        } else {
 
-        do {
-            //Print List of Accounts to be deposited into.
-            displayAccounts(accountList);
+            boolean loopIfIncorrectSelection = false;
 
-            //get user selection
-            String str = consoleReader.readLine();
-            int selection = -1;
-            boolean valid_int = selectionValidation(str);
+            do {
+                //Print List of Accounts to be deposited into.
+                displayAccounts(accountList);
 
-            if (valid_int){
-                selection = Integer.parseInt(str);
-            }
-            else {
-                logger.logAndPrint("Selection Invalid, rerouting to list of accounts.");
-            }
+                //get user selection
+                String str = consoleReader.readLine();
+                int selection = -1;
+                boolean valid_int = selectionIntegerValidation(str);
 
-            if (selection > accountList.size()) {
-                System.out.println("Please select a number that corresponds to an account on the list");
-                loopIfIncorrectSelection = true;
-            } else {
-                //Find Appropriate Balance and print it.
-                Double BalanceSelection = accountList.get((selection - 1)).getBalance();
-                System.out.println("Selected Balance is: " + BalanceSelection);
-
-                //Request Update Withdrawal Amount
-                System.out.println("How much do you want to withdraw? :  ");
-                Double withdrawAmount = Double.parseDouble(consoleReader.readLine());
-                //Check for Valid Withdraw amount
-
-                if (transactionService.isWithdrawAmountValid(withdrawAmount, BalanceSelection)) {
-                    Double withdrawTotal = BalanceSelection - withdrawAmount;
-
-                    //Make and Configure account object.
-                    Transaction newTran = new Transaction();
-                    newTran.setOwner(userService.getSessionUser());
-                    newTran.setType("Withdraw");
-                    newTran.setAmount(withdrawAmount);
-                    newTran.setNewBalance(withdrawTotal);
-                    newTran.setAccount(accountList.get(selection - 1));
-                    newTran.setOwner(accountList.get(selection - 1).getOwner());
-
-                    Transaction processedTransaction = transactionDAO.save(newTran);
-                    //Should be written to DB now. Update the balance on the account
-                    Account updaterAccount = new Account();
-                    updaterAccount.setBalance(withdrawTotal);
-                    updaterAccount.setType(accountList.get(selection - 1).getType());
-                    updaterAccount.setId(accountList.get(selection - 1).getId());
-                    updaterAccount.setName(accountList.get(selection - 1).getName());
-                    updaterAccount.setOwner(accountList.get(selection - 1).getOwner());
-
-                    //Update working list.
-                    accountList.get(selection - 1).setBalance(withdrawTotal);
-                    //Push Update
-                    accountService.updateOldAccount(updaterAccount);
-
+                if (valid_int) {
+                    selection = Integer.parseInt(str);
                 } else {
-                    logger.logAndPrint("Error in withdraw process.");
-                    logger.logAndPrint("Returning to transactions.");
-                    logger.log("Withdraw ended");
+                    logger.logAndPrint("Selection Invalid, rerouting to list of accounts.");
                 }
-            }
-            loopIfIncorrectSelection = false;// Break loop if we get to this validation
 
-    } while(loopIfIncorrectSelection);
+                if (selection > accountList.size()) {
+                    System.out.println("Please select a number that corresponds to an account on the list");
+                    loopIfIncorrectSelection = true;
+                } else {
+                    //Find Appropriate Balance and print it.
+                    Double BalanceSelection = accountList.get((selection - 1)).getBalance();
+                    System.out.println("Selected Balance is: " + BalanceSelection);
+
+                    //Request Update Withdrawal Amount
+                    System.out.println("How much do you want to withdraw? :  ");
+
+                    String stringGiven = consoleReader.readLine();
+                    boolean validDouble = doubleFormantValidation(stringGiven);
+                    double withdrawAmount = 0.00;
+
+                    if (validDouble) {
+                        withdrawAmount = Double.parseDouble(consoleReader.readLine());
+                        //Check what they gave me is not outside the scope of a double in money format
+                        //Check for Valid Withdraw amount
+                    }
+
+                    if (transactionService.isWithdrawAmountValid(withdrawAmount, BalanceSelection)) {
+                        Double withdrawTotal = BalanceSelection - withdrawAmount;
+
+                        //Make and Configure account object.
+                        Transaction newTran = new Transaction();
+                        newTran.setOwner(userService.getSessionUser());
+                        newTran.setType("Withdraw");
+                        newTran.setAmount(withdrawAmount);
+                        newTran.setNewBalance(withdrawTotal);
+                        newTran.setAccount(accountList.get(selection - 1));
+                        newTran.setOwner(accountList.get(selection - 1).getOwner());
+
+                        Transaction processedTransaction = transactionDAO.save(newTran);
+                        //Should be written to DB now. Update the balance on the account
+                        Account updaterAccount = new Account();
+                        updaterAccount.setBalance(withdrawTotal);
+                        updaterAccount.setType(accountList.get(selection - 1).getType());
+                        updaterAccount.setId(accountList.get(selection - 1).getId());
+                        updaterAccount.setName(accountList.get(selection - 1).getName());
+                        updaterAccount.setOwner(accountList.get(selection - 1).getOwner());
+
+                        //Update working list.
+                        accountList.get(selection - 1).setBalance(withdrawTotal);
+                        //Push Update
+                        accountService.updateOldAccount(updaterAccount);
+
+                    } else {
+                        logger.logAndPrint("Error in withdraw process.");
+                        logger.logAndPrint("Returning to transactions.");
+                        logger.log("Withdraw ended");
+                    }
+                }
+                loopIfIncorrectSelection = false;// Break loop if we get to this validation
+
+            } while (loopIfIncorrectSelection);
+        }
+        logger.log("End of Withdraw");
 }
 
 
@@ -276,13 +312,21 @@ public class TransactionService {
     }
 
     //Function to ensure a string given is an int and that it can be used in Integer.parseInt
-    public boolean selectionValidation(String argStr) {
+    public boolean selectionIntegerValidation(String argStr) {
         try {
-            @SuppressWarnings("unused")
             int x = Integer.parseInt(argStr);
             return true; //String is an Integer
         } catch (NumberFormatException e) {
             return false; //String is not an Integer
+        }
+    }
+
+    public boolean doubleFormantValidation(String argStr) {
+        try {
+            double x = Double.parseDouble(argStr);
+            return true; //String is a double
+        } catch (NumberFormatException e) {
+            return false; //String is not a double
         }
     }
 
