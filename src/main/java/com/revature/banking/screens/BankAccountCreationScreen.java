@@ -2,10 +2,10 @@ package com.revature.banking.screens;
 
 //TODO DONE.
 
-import com.revature.banking.Exceptions.InvalidRequestException;
-import com.revature.banking.Exceptions.ResourcePersistenceException;
-import com.revature.banking.Services.AccountService;
-import com.revature.banking.Services.UserService;
+import com.revature.banking.exceptions.InvalidRequestException;
+import com.revature.banking.exceptions.ResourcePersistenceException;
+import com.revature.banking.services.AccountService;
+import com.revature.banking.services.UserService;
 import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;

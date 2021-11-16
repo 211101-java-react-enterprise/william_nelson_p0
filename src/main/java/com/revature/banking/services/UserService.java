@@ -1,9 +1,9 @@
-package com.revature.banking.Services;
+package com.revature.banking.services;
 
 import com.revature.banking.DAOS.AppUserDAO;
-import com.revature.banking.Exceptions.AuthenticationException;
-import com.revature.banking.Exceptions.InvalidRequestException;
-import com.revature.banking.Exceptions.ResourcePersistenceException;
+import com.revature.banking.exceptions.AuthenticationException;
+import com.revature.banking.exceptions.InvalidRequestException;
+import com.revature.banking.exceptions.ResourcePersistenceException;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.logging.Logger;
 
@@ -76,7 +76,7 @@ public class UserService {
     public void authenticateUser(String username, String password) {
 
         //Only Executes if the data isn't null or empty
-        if (username == null || username.trim().equals("") || password.trim().equals("")){
+        if (username == null || username.trim().equals("") || password.trim().equals("") || password == null){
             throw new InvalidRequestException("Invalid credential values provided!");
         }
 
@@ -90,7 +90,6 @@ public class UserService {
         //Return the Authenticated user to the caller of the Authenticate process
         sessionUser = authenticatedUser;
 
-
     }
 
     public void logout() {
@@ -100,8 +99,6 @@ public class UserService {
     public boolean isSessionActive() {
         return sessionUser != null;
     }
-
-
 
 
     //This Function Checks that each field in a given Appuser is not Null, or Empty

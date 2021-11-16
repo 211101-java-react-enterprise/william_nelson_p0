@@ -1,8 +1,8 @@
 package com.revature.banking.screens;
 //TODO DONE
-import com.revature.banking.Exceptions.AuthenticationException;
-import com.revature.banking.Exceptions.InvalidRequestException;
-import com.revature.banking.Services.UserService;
+import com.revature.banking.exceptions.AuthenticationException;
+import com.revature.banking.exceptions.InvalidRequestException;
+import com.revature.banking.services.UserService;
 import com.revature.banking.util.ScreenRouter;
 import com.revature.banking.util.logging.Logger;
 

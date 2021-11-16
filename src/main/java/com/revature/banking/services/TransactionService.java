@@ -1,4 +1,4 @@
-package com.revature.banking.Services;
+package com.revature.banking.services;
 //TODO Write Test Cases and Implement
 
 //This service handles all validation of transactions that can be made on accounts

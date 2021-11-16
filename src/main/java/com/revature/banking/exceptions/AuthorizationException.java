@@ -1,4 +1,4 @@
-package com.revature.banking.Exceptions;
+package com.revature.banking.exceptions;
 
 public class AuthorizationException extends RuntimeException{
     public AuthorizationException(String message) {

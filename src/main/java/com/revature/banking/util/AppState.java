@@ -3,9 +3,9 @@ package com.revature.banking.util;
 import com.revature.banking.DAOS.AccountDAO;
 import com.revature.banking.DAOS.AppUserDAO;
 import com.revature.banking.DAOS.TransactionsDAO;
-import com.revature.banking.Services.AccountService;
-import com.revature.banking.Services.TransactionService;
-import com.revature.banking.Services.UserService;
+import com.revature.banking.services.AccountService;
+import com.revature.banking.services.TransactionService;
+import com.revature.banking.services.UserService;
 import com.revature.banking.screens.*;
 import com.revature.banking.util.logging.Logger;
 

@@ -1,10 +1,10 @@
-package com.revature.banking.Services;
+package com.revature.banking.services;
 //TODO Test Casing to be implented and tried.
 
 import com.revature.banking.DAOS.AccountDAO;
-import com.revature.banking.Exceptions.AuthorizationException;
-import com.revature.banking.Exceptions.InvalidRequestException;
-import com.revature.banking.Exceptions.ResourcePersistenceException;
+import com.revature.banking.exceptions.AuthorizationException;
+import com.revature.banking.exceptions.InvalidRequestException;
+import com.revature.banking.exceptions.ResourcePersistenceException;
 import com.revature.banking.models.Account;
 import com.revature.banking.util.collections.List;
 import com.revature.banking.util.logging.Logger;

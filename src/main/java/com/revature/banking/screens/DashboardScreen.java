@@ -1,6 +1,6 @@
 package com.revature.banking.screens;
 //TODO DONE
-import com.revature.banking.Services.UserService;
+import com.revature.banking.services.UserService;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.ScreenRouter;
 import com.revature.banking.util.logging.Logger;
