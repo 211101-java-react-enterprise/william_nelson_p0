@@ -6,6 +6,7 @@ import com.revature.banking.exceptions.AuthorizationException;
 import com.revature.banking.exceptions.InvalidRequestException;
 import com.revature.banking.exceptions.ResourcePersistenceException;
 import com.revature.banking.models.Account;
+import com.revature.banking.util.collections.LinkedList;
 import com.revature.banking.util.collections.List;
 import com.revature.banking.util.logging.Logger;
 
@@ -24,7 +25,7 @@ public class AccountService {
     }
 
     //Get a list of accounts by owner ID
-    public List<Account> findMyAccounts() {
+    public List<Account> findMyAccounts() throws RuntimeException {
 
         if (!userService.isSessionActive()) {
             String msg = "No active user session to perform operation!";
@@ -33,7 +34,11 @@ public class AccountService {
         }
 
         logger.log("Found Accounts by logged in user");
-        return accountDAO.findAccountsByOwnerId(userService.getSessionUser().getId());
+        List<Account> accountList = new LinkedList<>();
+        accountList = accountDAO.findAccountsByOwnerId((userService.getSessionUser().getId()));
+
+        return accountList;
+
 
     }
 
