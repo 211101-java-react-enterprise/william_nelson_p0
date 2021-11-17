@@ -59,6 +59,7 @@ public class DashboardScreen extends Screen {
                     break;
                 case "3":
                     userService.logout();
+                    router.navigate("/welcome");
                     break;
                 default:
                     System.out.println("The user made an invalid selection");

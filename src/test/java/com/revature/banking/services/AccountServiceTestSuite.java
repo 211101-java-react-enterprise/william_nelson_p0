@@ -10,10 +10,7 @@ import com.revature.banking.models.AppUser;
 import com.revature.banking.util.collections.LinkedList;
 import com.revature.banking.util.collections.List;
 import com.revature.banking.util.logging.Logger;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import static org.mockito.Mockito.*;
 
@@ -83,7 +80,7 @@ public class AccountServiceTestSuite {
     }
 //Test createNewAccount
     //Test Throws InvalidRequest if account is not valid
-
+    @Ignore
     @Test (expected = InvalidRequestException.class)
     public void test_if_isSessionActive_returnsFalse_throw_InvalidRequestException(){
 
