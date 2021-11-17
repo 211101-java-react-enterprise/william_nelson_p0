@@ -51,10 +51,11 @@ public class RegisterScreen extends Screen {
 
         try {
             userService.registerNewUser(newUser);
-            System.out.println(newUser);
+            System.out.println("User registered, please log in to use features!");
         } catch (InvalidRequestException e) {
             logger.logAndPrint("You have provided invalid data. Please try again.");
         } catch (ResourcePersistenceException e) {
+            System.out.println("Username or Email already taken");
             logger.logAndPrint("There was an issue when trying to persist the user to the datasource.");
         }
 

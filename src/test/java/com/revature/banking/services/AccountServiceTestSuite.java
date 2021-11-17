@@ -3,6 +3,8 @@ package com.revature.banking.services;
 import com.revature.banking.DAOS.AccountDAO;
 import com.revature.banking.exceptions.AuthenticationException;
 import com.revature.banking.exceptions.AuthorizationException;
+import com.revature.banking.exceptions.InvalidRequestException;
+import com.revature.banking.exceptions.ResourcePersistenceException;
 import com.revature.banking.models.Account;
 import com.revature.banking.models.AppUser;
 import com.revature.banking.util.collections.LinkedList;
@@ -82,8 +84,47 @@ public class AccountServiceTestSuite {
 //Test createNewAccount
     //Test Throws InvalidRequest if account is not valid
 
+    @Test (expected = InvalidRequestException.class)
+    public void test_if_isSessionActive_returnsFalse_throw_InvalidRequestException(){
+
+        //Arrange
+        List accountList = new LinkedList();
+        AppUser validUser = new AppUser("id", "valid", "valid", "valid", "valid", "valid");
+        Account dummyAccount = new Account();
+        when(mockUserService.isSessionActive()).thenReturn(true);
+        when(mockUserService.getSessionUser()).thenReturn(validUser);
 
 
+        //Act
+        try{
+           sut.createNewAccount(dummyAccount);
+        }finally{
+            verify(mockAccountDAO, times(0)).save(dummyAccount);
+        }
+
+    }
+
+    @Test (expected = ResourcePersistenceException.class)
+    public void test_if_isSessionActive_returnsTrue_and_CreatedAccountEquals_Null_Throw_Exception(){
+
+        //Arrange
+        List accountList = new LinkedList();
+        AppUser validUser = new AppUser("Valid", "valid", "valid", "valid", "valid", "valid");
+        Account dummyAccount = new Account();
+        Account savedDummy = new Account();
+
+        when(sut.isAccountValid(dummyAccount)).thenReturn(true);
+       // when(dummyAccount.setOwner(mockUserService.getSessionUser())).thenReturn(validUser);
+        when(mockAccountDAO.save(dummyAccount)).thenReturn(null);
+
+        //Act
+        try{
+            sut.createNewAccount(dummyAccount);
+        }finally{
+            //What can I verify here.
+        }
+
+    }
 
 //Test updateOldAccount
 
