@@ -29,7 +29,7 @@ public class TransactionsDAO implements CrudDAO<Transaction>{
                 pstmt.setString(3, newTran.getType());
                 pstmt.setDouble(4, newTran.getAmount());
                 pstmt.setDouble(5, newTran.getNewBalance());
-                pstmt.setString(6, newTran.getOwner().getId());
+                pstmt.setString(6, newTran.getAccount().getId());
 
                 int rowsInserted = pstmt.executeUpdate();
 
