@@ -150,7 +150,7 @@ public class TransactionService {
                     double depositAmount = 0.00;
 
                     if (validDouble) {
-                        depositAmount = Double.parseDouble(consoleReader.readLine());
+                        depositAmount = Double.parseDouble(stringGiven);
                         //Check what they gave me is not outside the scope of a double in money format
                         //Check for Valid Withdraw amount
                     }
@@ -235,7 +235,7 @@ public class TransactionService {
                     double withdrawAmount = 0.00;
 
                     if (validDouble) {
-                        withdrawAmount = Double.parseDouble(consoleReader.readLine());
+                        withdrawAmount = Double.parseDouble(stringGiven);
                         //Check what they gave me is not outside the scope of a double in money format
                         //Check for Valid Withdraw amount
                     }
